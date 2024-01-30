@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="showcw.css" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="status__content__text div3">Hello</div>
+    <div class="status__content__text status__content__text--visible">Hello</div>
+    <div class="status__content__text status__content__text--visible">Hello</div>
+    <div class="status__content__text">Hello</div>
+    <script src="showcw.js"></script>
+    <style>
+        .status__content__text {
+            background-color: aquamarine;
+        }
+
+        .status__content__text--visible {
+            font-weight: bold;
+        }
+
+        .show-cw-addon {
+            font-style: italic;
+        }
+
+        .status__content__text:not(.div3){
+            color: red;
+        }
+    </style>
+</body>
+</html>
