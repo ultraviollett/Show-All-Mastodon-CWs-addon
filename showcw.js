@@ -6,23 +6,25 @@ function toggleCw(node, show = true) {
     show = true -> showing the posts
     show = false -> hiding the posts
     */
-  const classToFind = show ? "status__content__text" : "show-cw-addon";
-  const postList = node.getElementsByClassName(classToFind);
+
 
   if (show) {
     //if you are showing posts, 
+    const postList = node.getElementsByClassName("status__content__text"); //list of posts
     for (const post of postList) {
-    if (!post.classList.contains("status__content__text--visible")){
+    if (!post.classList.contains("status__content__text--visible")){ //adds classes to posts that are hidden
       post.classList.add("status__content__text--visible");
       post.classList.add("show-cw-addon");
     }
     }
   } else {
+    const postList = node.getElementsByClassName("show-cw-addon"); //list of posts that have been previously altered by this add-on
     for (const post of postList) {
-      post[i].classList.remove("status__content__text--visible");
+      post[i].classList.remove("status__content__text--visible"); //makes posts with CW invisible again
     }
   }
 
+  //list of buttons that toggle CW posts
   const buttonList = node.getElementsByClassName(
     "status__content__spoiler-link"
   );
@@ -30,6 +32,7 @@ function toggleCw(node, show = true) {
   for (const btn of buttonList) {
     //change name of button depending on if you show or hide
     btn.textContent = show ? "Showing All" : "Hiding All";
+    //disables button so not to mess with add-on
     btn.disabled = "true";
   }
 
@@ -38,6 +41,7 @@ function toggleCw(node, show = true) {
 
 toggleCw(document);
 
+//checks for newly added elements, then runs code
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0) {
