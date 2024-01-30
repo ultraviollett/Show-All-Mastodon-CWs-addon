@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "SHOW ALL for Mastodon CWs",
+    "description": "Instead of indivdually clicking 'show' for every Mastodon Post hidden by a CW, show them all!",
+    "homepage_url": "",
+    "version": "1.0",
+
+  
+    "content_scripts": [
+      {
+        "matches": ["https://*/*","http://*/*"],
+        "js": ["./showcw.js"]
+      }
+    ]
+  }
