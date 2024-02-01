@@ -1,15 +1,27 @@
 {
-    "manifest_version": 2,
-    "name": "SHOW ALL for Mastodon CWs",
-    "description": "Instead of indivdually clicking 'show' for every Mastodon Post hidden by a CW, show them all!",
-    "homepage_url": "https://github.com/ultraviollett/Show-All-Mastodon-CWs-addon",
-    "version": "1.0",
-  
-    "content_scripts": [
-      {
-        "matches": ["https://*/*","http://*/*"],
-        "js": ["showcw.js"]
-        
-      }
-    ]
-  }
+	"manifest_version": 2,
+	"name": "SHOW ALL for Mastodon CWs",
+	"description": "Instead of indivdually clicking 'show' for every Mastodon Post hidden by a CW, show them all!",
+	"homepage_url": "https://github.com/ultraviollett/Show-All-Mastodon-CWs-addon",
+	"version": "1.0",
+	"permissions": [
+		"activeTab",
+		"storage"
+		],
+
+	"content_scripts": [
+		{
+		  "matches": ["<all_urls>"],
+		  "js": ["showcw.js"]
+		}
+	],
+
+	"background":{
+		"scripts": ["storage.js"]
+	},
+	
+	"browser_action": {
+		"default_title": "Show CW",
+		"default_popup": "popup/popuptoggle.html"
+	}
+}
