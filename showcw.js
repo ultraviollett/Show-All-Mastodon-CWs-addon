@@ -1,22 +1,26 @@
+/*
+I'm apologizing in advance for this code. I did not draw out any diagrams or anything, I just started typing. I will return to clean this up one day, with a clear, logical flow chart.
+*/
+
 //just so I can add stuff to console easier lol
 prt = x => console.log(x);
 
 function changeBtnName(node, show = true, isBtnUnuseable = true) {
-	//list of buttons that toggle CW posts
 
+	//list of buttons that toggle CW posts
 	const buttonList = node.getElementsByClassName(
 		"status__content__spoiler-link"
 	);
 
-	const buttonText = (function () {
-		const disabledText = show ? "Showing All" : "Hiding All";
+	const btnText = (function () {
+		const disabledBtnText = show ? "Showing All" : "Hiding All";
 		const regularText = "Toggle";
-		return isBtnUnuseable ? disabledText : regularText;
+		return isBtnUnuseable ? disabledBtnText : regularText;
 	})();
-	prt(buttonText);
+
 	for (const btn of buttonList) {
 		//change name of button depending on if you show or hide
-		btn.textContent = buttonText;
+		btn.textContent = btnText;
 
 		//disables button so not to mess with add-on, or enables it
 		btn.disabled = isBtnUnuseable;
@@ -24,10 +28,7 @@ function changeBtnName(node, show = true, isBtnUnuseable = true) {
 }
 
 function showCw(node = document, isEnabled = true) {
-
 	changeBtnName(node, true, isEnabled);
-
-	if (!isEnabled) return;
 
 	const postList = node.getElementsByClassName("status__content__text"); //list of posts
 
@@ -36,14 +37,12 @@ function showCw(node = document, isEnabled = true) {
 	}
 
 	for (const post of postList) {
-		if (!post.classList.contains("status__content__text--visible")) {
-			//adds classes to posts that are hidden
-			post.classList.add("status__content__text--visible");
-			post.classList.add("show-cw-addon");
-		}
-	}
+		if (post.classList.contains("status__content__text--visible")) continue;
 
-	
+		post.classList.add("show-cw-addon");
+		//adds classes to posts that are hidden
+		isEnabled && post.classList.add("status__content__text--visible");
+	}
 
 	prt(`${postList.length} CW posts shown`);
 }
@@ -63,7 +62,6 @@ function hideCw(node = document, isEnabled = true) {
 		post.classList.remove("status__content__text--visible"); //makes posts with CW invisible again
 	}
 
-
 	prt(`${postList.length} CW posts hidden`);
 }
 
@@ -77,7 +75,7 @@ function checkNewNodes(func = showCw, isEnabled = true) {
 			for (const node of nodes) {
 				//run substition for each new node found
 				func(node, isEnabled);
-				prt("isEnabled: "+isEnabled);
+				prt("isEnabled: " + isEnabled);
 			}
 		});
 	});
@@ -86,23 +84,6 @@ function checkNewNodes(func = showCw, isEnabled = true) {
 		subtree: true,
 	});
 }
-
-// function findPosts(){
-// 	document.body.style.border = "red solid 2px";
-// 	prt("Border is red");
-
-// 	const postList = document.getElementsByClassName("status__content__text--visible"); //list of posts
-
-// 	if (postList.length != 0) {
-// 		prt("Posts with Cw Found!");
-// 	}else{
-// 		prt("No post found")
-
-// 	}
-
-// 	prt(postList.length ?? "none")
-
-// }
 
 function toggleCw(isShownAll = true, isEnabled = true) {
 	const shownText = isShownAll
@@ -118,8 +99,10 @@ function toggleCw(isShownAll = true, isEnabled = true) {
 	// 		? checkNewNodes(showCw, isEnabled)
 	// 		: checkNewNodes(hideCw, isEnabled);
 	// } else {
-		isShownAll ? showCw(document, isEnabled) : hideCw(document, isEnabled);
-		isShownAll ? checkNewNodes(showCw, isEnabled) : checkNewNodes(hideCw, isEnabled);
+	isShownAll ? showCw(document, isEnabled) : hideCw(document, isEnabled);
+	isShownAll
+		? checkNewNodes(showCw, isEnabled)
+		: checkNewNodes(hideCw, isEnabled);
 	// }
 }
 
@@ -136,7 +119,7 @@ function doChangedSettings(change) {
 		obj.oldValue.isShownAll == isShownAll &&
 		obj.oldValue.isEnabled == isEnabled
 	)
-		return;
+		return; //if changed settings is called but theres no actual change in settings, dont do anything
 
 	toggleCw(isShownAll, isEnabled);
 }
@@ -145,10 +128,12 @@ function onStart() {
 	browser.storage.local.get("settings").then(results => {
 		let {isShownAll, isEnabled} = results.settings;
 
+		if (!isEnabled) return; //if its disabled why would you do anything? just chill
+
 		toggleCw(isShownAll, isEnabled);
 	});
 }
 
+//both onStart and doChangedSettings go to toggleCw, but they access storage differently and so are separated
 onStart();
-
 browser.storage.onChanged.addListener(doChangedSettings);
